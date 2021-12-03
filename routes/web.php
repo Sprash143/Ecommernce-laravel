@@ -1,6 +1,12 @@
 <?php
 
+use App\Http\Controllers\user;
+
+use App\Http\Middleware\UserAuth;
 use Illuminate\Support\Facades\Route;
+
+use Illuminate\Support\Facades\Session;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -13,7 +19,26 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
+Route::get('/login', function () {
+    return view('login');
+});
+
+// Route::get('/logout',function()
+// {
+
+//     Session::pull('user');
+//     return redirect('login');
 // });
-route::view('/','login');
+
+Route::match(['get','post'],'logout',[user::class,"logout"]);
+
+Route::view('/login', 'login');
+
+Route::post('/login',[user::class,'login']);
+//Route::view('/welcome', 'welcome');
+Route::middleware(['user'])->group(function () {
+    route::get('/welcome',[user::class,'welcome']);
+});
+
+
+Route::get('/working',[user::class,'checking']);
